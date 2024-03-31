@@ -2,7 +2,10 @@
 import { ref } from "vue";
 import OpenAI from "openai";
 import MdRenderer from "./MdRenderer.vue";
-import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
+import {
+  ChatCompletionChunk,
+  ChatCompletionMessageParam,
+} from "openai/resources/index.mjs";
 
 const props = defineProps<{
   apiKey: string;
@@ -20,9 +23,9 @@ const stringFromValue = (content: ContentType): string => {
   return "";
 };
 
-// model for textcontent
 const messages = ref<ChatCompletionMessageParam[]>([]);
 const textInput = ref<string>("");
+const streamedMessage = ref<string>("");
 
 const click = () => {
   messages.value = [
@@ -34,24 +37,55 @@ const click = () => {
     .create({
       model: "gpt-4-turbo-preview",
       messages: messages.value,
+      stream: true,
     })
     .then((response) => {
-      messages.value = [
-        ...messages.value,
-        ...response.choices.map((choice) => choice.message),
-      ];
-      textInput.value = "";
+      const stream = response.toReadableStream();
+      const reader = stream.getReader();
+
+      const readStream = () => {
+        reader.read().then(({ value, done }) => {
+          if (done) {
+            messages.value = [
+              ...messages.value,
+              { role: "assistant", content: streamedMessage.value },
+            ];
+            streamedMessage.value = "";
+            return;
+          }
+          const decoder = new TextDecoder("utf-8");
+          const decodedString = decoder.decode(value);
+          const responseObject = JSON.parse(
+            decodedString
+          ) as ChatCompletionChunk;
+
+          const textChange = responseObject.choices[0].delta.content;
+          if (textChange) {
+            streamedMessage.value += textChange;
+          }
+
+          readStream();
+        });
+      };
+
+      readStream();
     });
 };
 </script>
 
 <template>
   <div class="content">
-    <div v-for="message in messages">
-      <p v-if="message.content">
+    <template v-for="message in messages">
+      <p
+        v-if="message.content"
+        :class="{ assistant: message.role === 'assistant' }"
+      >
         <MdRenderer :source="stringFromValue(message.content)"></MdRenderer>
       </p>
-    </div>
+      <p v-if="streamedMessage" class="assistant">
+        <MdRenderer :source="streamedMessage"></MdRenderer>
+      </p>
+    </template>
   </div>
   <form class="input-area">
     <textarea v-model="textInput"></textarea>
@@ -64,12 +98,18 @@ const click = () => {
   background: rgb(233, 228, 228);
   margin: 30px;
   text-align: left;
-  padding: 20px;
+  padding: 20px 0;
+}
+.content > p {
+  padding: 0 20px;
 }
 .input-area {
   display: flex;
   justify-content: center;
   margin: 30px;
   flex-direction: column;
+}
+.assistant {
+  background-color: aliceblue;
 }
 </style>
