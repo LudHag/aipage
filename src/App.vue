@@ -19,16 +19,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <main>
-    <header>
-      <h1>Ai page</h1>
-      <form @submit.prevent="save" v-if="!apiKey">
-        <label for="api-key">API Key</label>
-        <input v-model="apiKeyInput" />
-      </form>
-    </header>
-    <Chat :api-key="apiKey" v-if="apiKey" />
-  </main>
+  <header>
+    <form @submit.prevent="save" v-if="!apiKey">
+      <label for="api-key">API Key</label>
+      <input v-model="apiKeyInput" />
+    </form>
+  </header>
+  <Chat :api-key="apiKey" v-if="apiKey" />
 </template>
 
 <style scoped></style>

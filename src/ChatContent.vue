@@ -36,6 +36,8 @@ const stringFromValue = (content: ContentType): string => {
   background: rgb(233, 228, 228);
   margin: 30px;
   text-align: left;
+  width: 100%;
+  max-width: 800px;
 }
 .content > p {
   padding: 0 20px;

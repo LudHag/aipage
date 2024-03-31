@@ -29,5 +29,7 @@ const click = () => {
   justify-content: center;
   margin: 30px;
   flex-direction: column;
+  width: 100%;
+  max-width: 800px;
 }
 </style>
