@@ -12,10 +12,16 @@ const click = () => {
   emit("question", textInput.value);
   textInput.value = "";
 };
+
+const formEnter = (e: KeyboardEvent) => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    click();
+  }
+};
 </script>
 
 <template>
-  <form class="input-area" @submit.prevent="click">
+  <form class="input-area" @submit.prevent="click" @keydown.enter="formEnter">
     <NInput v-model:value="textInput" type="textarea" />
     <NButton type="primary" attrType="submit" @click.prevent="click"
       >Skicka</NButton
@@ -30,6 +36,6 @@ const click = () => {
   margin: 30px;
   flex-direction: column;
   width: 100%;
-  max-width: 800px;
+  max-width: 1000px;
 }
 </style>

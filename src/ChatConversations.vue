@@ -50,6 +50,7 @@ const sortedConversations = computed(() =>
 aside {
   text-align: left;
   width: 300px;
+  padding-right: 10px;
 }
 a {
   display: block;

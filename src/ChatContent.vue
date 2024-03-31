@@ -18,16 +18,16 @@ const stringFromValue = (content: ContentType): string => {
 <template>
   <div class="content">
     <template v-for="message in messages">
-      <p
+      <div
         v-if="message.content"
         :class="{ assistant: message.role === 'assistant' }"
       >
         <MdRenderer :source="stringFromValue(message.content)"></MdRenderer>
-      </p>
+      </div>
     </template>
-    <p v-if="streamedMessage" class="assistant">
+    <div v-if="streamedMessage" class="assistant">
       <MdRenderer :source="streamedMessage"></MdRenderer>
-    </p>
+    </div>
   </div>
 </template>
 
@@ -37,13 +37,14 @@ const stringFromValue = (content: ContentType): string => {
   margin: 30px;
   text-align: left;
   width: 100%;
-  max-width: 800px;
+  max-width: 1000px;
 }
-.content > p {
+.content > div {
   padding: 0 20px;
   display: flex;
   margin-bottom: 0;
 }
+
 .assistant {
   background-color: aliceblue;
 }
