@@ -14,6 +14,7 @@ export const djb2HashCode = (str: string) => {
 export const saveMessages = (messages: ChatCompletionMessageParam[]) => {
   const hash = djb2HashCode(messages[0].content as string);
   const conversation: Conversation = {
+    id: `messages-${hash}`,
     messages,
     title: messages[0].content as string,
     date: new Date().toISOString(),

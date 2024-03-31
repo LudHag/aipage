@@ -3,6 +3,7 @@ import { ref } from "vue";
 import OpenAI from "openai";
 import ChatInput from "./ChatInput.vue";
 import ChatContent from "./ChatContent.vue";
+import ChatConversations from "./ChatConversations.vue";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 import { getAiResponse } from "./openai-api";
 import { saveMessages } from "./utils";
@@ -27,13 +28,20 @@ const click = (question: string) => {
     }
   });
 };
+
+const messagesSelected = (selectedMessages: ChatCompletionMessageParam[]) => {
+  messages.value = selectedMessages;
+  // Scroll down to the last message
+  const content = document.querySelector(".content");
+  if (content) {
+    content.scrollTop = content.scrollHeight;
+  }
+};
 </script>
 
 <template>
   <div class="wrapper">
-    <aside>
-      <h2>Conversations</h2>
-    </aside>
+    <ChatConversations @messages="messagesSelected" />
     <main>
       <h1>Ai page</h1>
       <ChatContent :messages="messages" :streamed-message="streamedMessage" />
@@ -48,6 +56,7 @@ main {
   align-items: center;
   margin: auto;
   flex-direction: column;
+  flex-grow: 1;
 }
 .wrapper {
   display: flex;

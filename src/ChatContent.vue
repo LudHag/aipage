@@ -42,6 +42,7 @@ const stringFromValue = (content: ContentType): string => {
 .content > p {
   padding: 0 20px;
   display: flex;
+  margin-bottom: 0;
 }
 .assistant {
   background-color: aliceblue;
