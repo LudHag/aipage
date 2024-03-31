@@ -101,4 +101,10 @@ defineProps<{
   background-color: #002b36;
   color: #839496;
 }
+
+.md-container :deep(pre .language-json::before) {
+  content: "JSON";
+  background-color: #e69a8dff;
+  color: #5f4b8bff;
+}
 </style>
