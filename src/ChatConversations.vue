@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 import { Conversation } from "./models";
 import { getConversations, getMessages } from "./utils";
@@ -25,6 +25,11 @@ const click = (conversation: Conversation) => {
     emit("messages", loadedConversation.messages);
   }
 };
+const sortedConversations = computed(() =>
+  conversations.value.sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  )
+);
 </script>
 
 <template>
@@ -32,7 +37,7 @@ const click = (conversation: Conversation) => {
     <h2>Conversations</h2>
     <a @click.prevent="emit('messages', [])">New</a>
     <a
-      v-for="conversation in conversations"
+      v-for="conversation in sortedConversations"
       :key="conversation.date"
       @click.prevent="() => click(conversation)"
     >
