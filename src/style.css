@@ -52,9 +52,8 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
-
-.card {
-  padding: 2em;
+.input-area .n-input textarea {
+  text-align: justify;
 }
 
 #app {
