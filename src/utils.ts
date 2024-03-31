@@ -23,6 +23,12 @@ export const saveMessages = (messages: ChatCompletionMessageParam[]) => {
   localStorage.setItem(`messages-${hash}`, JSON.stringify(conversation));
 };
 
+export const removeMessages = (messages: ChatCompletionMessageParam[]) => {
+  const hash = djb2HashCode(messages[0].content as string);
+
+  localStorage.removeItem(`messages-${hash}`);
+};
+
 export const getMessages = (key: string): Conversation | null => {
   const conversation = localStorage.getItem(key);
   if (!conversation) {

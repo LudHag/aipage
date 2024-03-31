@@ -4,6 +4,7 @@ import { NInput, NButton } from "naive-ui";
 
 const emit = defineEmits<{
   (e: "question", text: string): void;
+  (e: "remove"): void;
 }>();
 
 const textInput = ref<string>("");
@@ -27,6 +28,9 @@ const formEnter = (e: KeyboardEvent) => {
       >Skicka</NButton
     >
   </form>
+  <NButton type="warning" @click.prevent="emit('remove')"
+    >Ta bort konversation</NButton
+  >
 </template>
 
 <style scoped>

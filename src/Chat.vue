@@ -6,7 +6,7 @@ import ChatContent from "./ChatContent.vue";
 import ChatConversations from "./ChatConversations.vue";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 import { getAiResponse } from "./openai-api";
-import { saveMessages } from "./utils";
+import { removeMessages, saveMessages } from "./utils";
 
 const props = defineProps<{
   apiKey: string;
@@ -37,6 +37,15 @@ const messagesSelected = (selectedMessages: ChatCompletionMessageParam[]) => {
     content.scrollTop = content.scrollHeight;
   }
 };
+
+const remove = () => {
+  if (!confirm("Are you sure you want to remove the conversation?")) {
+    return;
+  }
+  removeMessages(messages.value);
+  messages.value = [];
+  window.location.reload();
+};
 </script>
 
 <template>
@@ -45,7 +54,7 @@ const messagesSelected = (selectedMessages: ChatCompletionMessageParam[]) => {
     <main>
       <h1>Ai page</h1>
       <ChatContent :messages="messages" :streamed-message="streamedMessage" />
-      <ChatInput @question="click" />
+      <ChatInput @question="click" @remove="remove" />
     </main>
   </div>
 </template>
