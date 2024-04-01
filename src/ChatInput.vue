@@ -25,11 +25,11 @@ const formEnter = (e: KeyboardEvent) => {
   <form class="input-area" @submit.prevent="click" @keydown.enter="formEnter">
     <NInput v-model:value="textInput" type="textarea" />
     <NButton type="primary" attrType="submit" @click.prevent="click"
-      >Skicka</NButton
+      >Send</NButton
     >
   </form>
   <NButton type="warning" @click.prevent="emit('remove')"
-    >Ta bort konversation</NButton
+    >Remove conversation</NButton
   >
 </template>
 
