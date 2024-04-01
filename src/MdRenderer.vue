@@ -107,4 +107,22 @@ defineProps<{
   background-color: #e69a8dff;
   color: #5f4b8bff;
 }
+
+.md-container :deep(pre .language-yaml::before) {
+  content: "YAML";
+  background-color: #f0f0f0;
+  color: #2e2e2e;
+}
+
+.md-container :deep(pre .language-sh::before) {
+  content: "Shell";
+  background-color: #f0f0f0;
+  color: #2e2e2e;
+}
+
+.md-container :deep(pre .language-typescript::before) {
+  content: "Typescript";
+  background-color: #00203fff;
+  color: #adefd1ff;
+}
 </style>
