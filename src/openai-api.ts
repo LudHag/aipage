@@ -14,7 +14,7 @@ export const getAiResponse = (
   return new Promise((resolve) => {
     openAi.chat.completions
       .create({
-        model: "gpt-4-turbo",
+        model: "gpt-4o",
         messages: messages.value,
         stream: true,
       })
