@@ -20,8 +20,15 @@ const openai = new OpenAI({
 const messages = ref<ChatCompletionMessageParam[]>([]);
 const streamedMessage = ref<string>("");
 
-const click = (question: string) => {
+const question = (question: string, imageb64?: string) => {
   messages.value = [...messages.value, { role: "user", content: question }];
+  if (imageb64) {
+    messages.value.push({
+      role: "user",
+      content: [{ type: "image_url", image_url: { url: imageb64 } }],
+    });
+  }
+
   getAiResponse(openai, messages, streamedMessage).then(() => {
     if (messages.value.length > 0) {
       saveMessages(messages.value);
@@ -54,7 +61,7 @@ const remove = () => {
     <main>
       <h1>Ai page</h1>
       <ChatContent :messages="messages" :streamed-message="streamedMessage" />
-      <ChatInput @question="click" @remove="remove" />
+      <ChatInput @question="question" @remove="remove" />
     </main>
   </div>
 </template>
