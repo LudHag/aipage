@@ -24,11 +24,17 @@ defineProps<{
   <div class="md-container" v-html="md.render(source)"></div>
 </template>
 <style scoped>
+.md-container {
+  max-width: 100%;
+}
+
 .md-container :deep(code) {
   font-family: "Fira Code", monospace;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
+  max-width: 100%;
+  text-wrap: wrap;
 }
 
 .md-container :deep(pre) {
