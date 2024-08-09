@@ -1,23 +1,17 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed } from "vue";
 
 import { Conversation } from "./models";
-import { getConversations, getMessages } from "./utils";
+import { getMessages } from "./utils";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
+
+const props = defineProps<{
+  conversations: Conversation[];
+}>();
 
 const emit = defineEmits<{
   (e: "messages", messages: ChatCompletionMessageParam[]): void;
 }>();
-
-const conversations = ref<Conversation[]>([]);
-
-onMounted(() => {
-  const storeageConversations: Conversation[] = getConversations();
-
-  if (storeageConversations.length > 0) {
-    conversations.value = storeageConversations;
-  }
-});
 
 const click = (conversation: Conversation) => {
   const loadedConversation = getMessages(conversation.id);
@@ -26,7 +20,7 @@ const click = (conversation: Conversation) => {
   }
 };
 const sortedConversations = computed(() =>
-  conversations.value.sort(
+  props.conversations.toSorted(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   )
 );
