@@ -25,7 +25,18 @@ const conversations = ref<Conversation[]>([]);
 
 onMounted(() => {
   loadConversations();
+  delListener();
 });
+
+const delListener = () => {
+  window.addEventListener("keydown", function (event) {
+    if (event.code === "Delete") {
+      if (messages.value.length > 0) {
+        remove();
+      }
+    }
+  });
+};
 
 const loadConversations = () => {
   const storeageConversations: Conversation[] = getConversations();
