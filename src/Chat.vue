@@ -6,7 +6,12 @@ import ChatContent from "./ChatContent.vue";
 import ChatConversations from "./ChatConversations.vue";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 import { getAiResponse } from "./openai-api";
-import { getConversations, removeMessages, saveMessages } from "./utils";
+import {
+  getConversations,
+  removeAllMessages,
+  removeMessages,
+  saveMessages,
+} from "./utils";
 import { Conversation } from "./models";
 
 const props = defineProps<{
@@ -80,6 +85,15 @@ const remove = () => {
   messages.value = [];
   loadConversations();
 };
+
+const removeall = () => {
+  if (!confirm("Are you sure you want to remove all conversations?")) {
+    return;
+  }
+  removeAllMessages();
+  messages.value = [];
+  conversations.value = [];
+};
 </script>
 
 <template>
@@ -91,7 +105,7 @@ const remove = () => {
     <main>
       <h1>Ai page</h1>
       <ChatContent :messages="messages" :streamed-message="streamedMessage" />
-      <ChatInput @question="question" @remove="remove" />
+      <ChatInput @question="question" @remove="remove" @removeall="removeall" />
     </main>
   </div>
 </template>

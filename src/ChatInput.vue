@@ -5,6 +5,7 @@ import { NInput, NButton, NUpload, UploadFileInfo } from "naive-ui";
 const emit = defineEmits<{
   (e: "question", text: string, imageb64?: string): void;
   (e: "remove"): void;
+  (e: "removeall"): void;
 }>();
 
 const textInput = ref<string>("");
@@ -20,6 +21,7 @@ const click = () => {
 
 const formEnter = (e: KeyboardEvent) => {
   if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
     click();
   }
 };
@@ -69,8 +71,12 @@ const handleFileListUpdate = (newFileList: UploadFileInfo[]) => {
       >Send</NButton
     >
   </form>
-  <NButton type="warning" @click.prevent="emit('remove')"
+  <NButton type="warning" class="remove-button" @click.prevent="emit('remove')"
     >Remove conversation</NButton
+  >
+
+  <NButton type="error" class="remove-button" @click.prevent="emit('removeall')"
+    >Remove all conversations</NButton
   >
 </template>
 
@@ -93,5 +99,8 @@ const handleFileListUpdate = (newFileList: UploadFileInfo[]) => {
 }
 .text-input-container > div {
   height: 100%;
+}
+.remove-button {
+  margin-bottom: 30px;
 }
 </style>
