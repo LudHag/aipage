@@ -30,12 +30,17 @@ export const removeMessages = (messages: ChatCompletionMessageParam[]) => {
 };
 
 export const removeAllMessages = () => {
+  const keysToRemove: string[] = [];
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
     if (key?.startsWith("messages-")) {
-      localStorage.removeItem(key);
+      keysToRemove.push(key);
     }
   }
+
+  keysToRemove.forEach((key) => {
+    localStorage.removeItem(key);
+  });
 };
 
 export const getMessages = (key: string): Conversation | null => {
