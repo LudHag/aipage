@@ -29,6 +29,7 @@ const sortedConversations = computed(() =>
 <template>
   <aside>
     <h2>Conversations</h2>
+
     <a @click.prevent="emit('messages', [])">New</a>
     <a
       v-for="conversation in sortedConversations"
