@@ -1,18 +1,26 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import OpenAI from "openai";
 import ChatInput from "./ChatInput.vue";
 import ChatContent from "./ChatContent.vue";
 import ChatConversations from "./ChatConversations.vue";
+import GenerateImage from "./GenerateImage.vue";
+import GeneratedImageDisplay from "./GeneratedImageDisplay.vue";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 import { getAiResponse } from "./openai-api";
+import { NSpin } from "naive-ui";
+import { getGeneratedImage } from "./openai-api";
 import {
   getConversations,
+  loadImages,
+  removeAllImages,
   removeAllMessages,
+  removeImage,
   removeMessages,
+  saveImages,
   saveMessages,
 } from "./utils";
-import { Conversation } from "./models";
+import { Conversation, GeneratedImageCall } from "./models";
 
 const props = defineProps<{
   apiKey: string;
@@ -28,9 +36,28 @@ const streamedMessage = ref<string>("");
 
 const conversations = ref<Conversation[]>([]);
 
+const generatedImages = ref<GeneratedImageCall[]>([]);
+const generatedImageSelected = ref<string | null>(null);
+const generatedImageLoading = ref<boolean>(false);
+
 onMounted(() => {
   loadConversations();
+  const images = loadImages();
+  generatedImages.value = images;
   delListener();
+});
+
+const generatedImageUrl = computed(() => {
+  if (generatedImageSelected.value) {
+    const generatedImageUrl = generatedImages.value.find(
+      (image) => image.prompt === generatedImageSelected.value
+    );
+
+    if (generatedImageUrl) {
+      return generatedImageUrl.url;
+    }
+  }
+  return null;
 });
 
 const delListener = () => {
@@ -69,6 +96,7 @@ const question = (question: string, imageb64?: string) => {
 };
 
 const messagesSelected = (selectedMessages: ChatCompletionMessageParam[]) => {
+  generatedImageSelected.value = null;
   messages.value = selectedMessages;
   // Scroll down to the last message
   const content = document.querySelector(".content");
@@ -94,18 +122,76 @@ const removeall = () => {
   messages.value = [];
   conversations.value = [];
 };
+
+const removeImageCall = (url: string) => {
+  generatedImageSelected.value = null;
+  removeImage(url);
+  const images = loadImages();
+  generatedImages.value = images;
+};
+const removeAllImageCall = () => {
+  generatedImageSelected.value = null;
+  removeAllImages();
+  const images = loadImages();
+  generatedImages.value = images;
+};
+
+const generateImage = (value: string) => {
+  generatedImageLoading.value = true;
+  getGeneratedImage(openai, value, "vivid")
+    .then((response) => {
+      if (!response) {
+        return;
+      }
+
+      generatedImages.value = [
+        ...generatedImages.value,
+        { prompt: value, url: response },
+      ];
+      saveImages(generatedImages.value);
+      generatedImageSelected.value = value;
+    })
+    .finally(() => {
+      generatedImageLoading.value = false;
+    });
+};
 </script>
 
 <template>
   <div class="wrapper">
     <ChatConversations
       @messages="messagesSelected"
+      @generate="generatedImageSelected = $event"
       :conversations="conversations"
+      :images="generatedImages"
     />
     <main>
       <h1>Ai page</h1>
-      <ChatContent :messages="messages" :streamed-message="streamedMessage" />
-      <ChatInput @question="question" @remove="remove" @removeall="removeall" />
+
+      <ChatContent
+        v-if="!generatedImageSelected"
+        :messages="messages"
+        :streamed-message="streamedMessage"
+      />
+      <ChatInput
+        v-if="!generatedImageSelected"
+        @question="question"
+        @remove="remove"
+        @removeall="removeall"
+      />
+      <NSpin size="large" v-if="generatedImageLoading" />
+
+      <GeneratedImageDisplay
+        v-if="generatedImageUrl"
+        :imageUrl="generatedImageUrl"
+        @remove="removeImageCall(generatedImageUrl)"
+        @removeall="removeAllImageCall()"
+      />
+
+      <GenerateImage
+        v-if="generatedImageSelected === 'new' && !generatedImageLoading"
+        @prompt="generateImage"
+      />
     </main>
   </div>
 </template>

@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import { Conversation } from "./models";
+import { Conversation, GeneratedImageCall } from "./models";
 import { getMessages } from "./utils";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 
 const props = defineProps<{
   conversations: Conversation[];
+  images: GeneratedImageCall[];
 }>();
 
 const emit = defineEmits<{
   (e: "messages", messages: ChatCompletionMessageParam[]): void;
+  (e: "generate", image: "new" | string): void;
 }>();
 
 const click = (conversation: Conversation) => {
@@ -37,6 +39,16 @@ const sortedConversations = computed(() =>
       @click.prevent="() => click(conversation)"
     >
       {{ conversation.title }}
+    </a>
+
+    <h2>Generated images</h2>
+    <a @click.prevent="emit('generate', 'new')">New</a>
+    <a
+      v-for="image in images"
+      :key="image.url"
+      @click.prevent="() => emit('generate', image.prompt)"
+    >
+      {{ image.prompt }}
     </a>
   </aside>
 </template>

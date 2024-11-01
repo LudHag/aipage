@@ -6,6 +6,23 @@ import {
 import { Stream } from "openai/streaming.mjs";
 import { Ref } from "vue";
 
+export const getGeneratedImage = async (
+  openAi: OpenAI,
+  prompt: string,
+  style: "vivid" | "natural"
+): Promise<string | undefined> => {
+  const generatedImage = await openAi.images.generate({
+    prompt,
+    model: "dall-e-3",
+    quality: "hd",
+    response_format: "url",
+    size: "1024x1024",
+    style,
+  });
+
+  return generatedImage.data[0].url;
+};
+
 export const getAiResponse = (
   openAi: OpenAI,
   messages: Ref<ChatCompletionMessageParam[]>,
