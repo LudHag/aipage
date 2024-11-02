@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { NButton } from "naive-ui";
+import { NButton, NText } from "naive-ui";
+import { GeneratedImageCall } from "./models";
 defineProps<{
-  imageUrl: string;
+  image: GeneratedImageCall;
 }>();
 
 const emit = defineEmits<{
@@ -11,14 +12,17 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <img :src="imageUrl" />
+  <img :src="image.url" />
+  <NText type="primary" class="prompt">
+    {{ image.prompt }}
+  </NText>
 
   <NButton type="warning" class="remove-button" @click.prevent="emit('remove')"
-    >Remove conversation</NButton
+    >Remove image</NButton
   >
 
   <NButton type="error" class="remove-button" @click.prevent="emit('removeall')"
-    >Remove all conversations</NButton
+    >Remove all images</NButton
   >
 </template>
 
@@ -27,6 +31,9 @@ img {
   max-height: 500px;
 }
 .remove-button {
+  margin-top: 30px;
+}
+.prompt {
   margin-top: 30px;
 }
 </style>

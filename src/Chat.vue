@@ -47,14 +47,14 @@ onMounted(() => {
   delListener();
 });
 
-const generatedImageUrl = computed(() => {
+const generatedImageCall = computed(() => {
   if (generatedImageSelected.value) {
-    const generatedImageUrl = generatedImages.value.find(
+    const generatedImage = generatedImages.value.find(
       (image) => image.prompt === generatedImageSelected.value
     );
 
-    if (generatedImageUrl) {
-      return generatedImageUrl.url;
+    if (generatedImage) {
+      return generatedImage;
     }
   }
   return null;
@@ -182,9 +182,9 @@ const generateImage = (value: string) => {
       <NSpin size="large" v-if="generatedImageLoading" />
 
       <GeneratedImageDisplay
-        v-if="generatedImageUrl"
-        :imageUrl="generatedImageUrl"
-        @remove="removeImageCall(generatedImageUrl)"
+        v-if="generatedImageCall"
+        :image="generatedImageCall"
+        @remove="removeImageCall(generatedImageCall.url)"
         @removeall="removeAllImageCall()"
       />
 
