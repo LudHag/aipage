@@ -12,7 +12,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <img :src="image.url" />
+  <img id="webpImage" :src="`data:image/webp;base64,${image.data}`" />
   <NText type="primary" class="prompt">
     {{ image.prompt }}
   </NText>

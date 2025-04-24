@@ -23,9 +23,9 @@ export const saveMessages = (messages: ChatCompletionMessageParam[]) => {
   localStorage.setItem(`messages-${hash}`, JSON.stringify(conversation));
 };
 
-export const saveImages = (images: GeneratedImageCall[]) => {
-  localStorage.setItem(`images`, JSON.stringify(images));
-};
+// export const saveImages = (images: GeneratedImageCall[]) => {
+//   localStorage.setItem(`images`, JSON.stringify(images));
+// };
 
 export const loadImages = (): GeneratedImageCall[] => {
   const images = localStorage.getItem("images");
@@ -33,12 +33,6 @@ export const loadImages = (): GeneratedImageCall[] => {
     return [];
   }
   return JSON.parse(images);
-};
-
-export const removeImage = (url: string) => {
-  const images = loadImages();
-  const newImages = images.filter((image) => image.url !== url);
-  saveImages(newImages);
 };
 
 export const removeAllImages = () => {

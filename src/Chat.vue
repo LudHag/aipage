@@ -15,9 +15,7 @@ import {
   loadImages,
   removeAllImages,
   removeAllMessages,
-  removeImage,
   removeMessages,
-  saveImages,
   saveMessages,
 } from "./utils";
 import { Conversation, GeneratedImageCall } from "./models";
@@ -123,12 +121,6 @@ const removeall = () => {
   conversations.value = [];
 };
 
-const removeImageCall = (url: string) => {
-  generatedImageSelected.value = null;
-  removeImage(url);
-  const images = loadImages();
-  generatedImages.value = images;
-};
 const removeAllImageCall = () => {
   generatedImageSelected.value = null;
   removeAllImages();
@@ -138,7 +130,7 @@ const removeAllImageCall = () => {
 
 const generateImage = (value: string) => {
   generatedImageLoading.value = true;
-  getGeneratedImage(openai, value, "vivid")
+  getGeneratedImage(openai, value)
     .then((response) => {
       if (!response) {
         return;
@@ -146,9 +138,8 @@ const generateImage = (value: string) => {
 
       generatedImages.value = [
         ...generatedImages.value,
-        { prompt: value, url: response },
+        { prompt: value, data: response },
       ];
-      saveImages(generatedImages.value);
       generatedImageSelected.value = value;
     })
     .finally(() => {
@@ -184,7 +175,6 @@ const generateImage = (value: string) => {
       <GeneratedImageDisplay
         v-if="generatedImageCall"
         :image="generatedImageCall"
-        @remove="removeImageCall(generatedImageCall.url)"
         @removeall="removeAllImageCall()"
       />
 

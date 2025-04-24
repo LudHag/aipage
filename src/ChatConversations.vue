@@ -45,7 +45,7 @@ const sortedConversations = computed(() =>
     <a @click.prevent="emit('generate', 'new')">New</a>
     <a
       v-for="image in images"
-      :key="image.url"
+      :key="image.prompt"
       @click.prevent="() => emit('generate', image.prompt)"
     >
       {{ image.prompt }}

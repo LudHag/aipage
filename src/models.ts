@@ -8,6 +8,6 @@ export interface Conversation {
 }
 
 export interface GeneratedImageCall {
-  url: string;
+  data: string;
   prompt: string;
 }

@@ -8,19 +8,23 @@ import { Ref } from "vue";
 
 export const getGeneratedImage = async (
   openAi: OpenAI,
-  prompt: string,
-  style: "vivid" | "natural"
+  prompt: string
 ): Promise<string | undefined> => {
   const generatedImage = await openAi.images.generate({
     prompt,
-    model: "dall-e-3",
-    quality: "hd",
-    response_format: "url",
+    model: "gpt-image-1",
     size: "1024x1024",
-    style,
+    output_format: "webp",
   });
 
-  return generatedImage.data[0].url;
+  const images = generatedImage.data;
+  if (!images || images.length === 0) {
+    return undefined;
+  }
+
+  const image = images[0];
+
+  return image.b64_json;
 };
 
 export const getAiResponse = (
