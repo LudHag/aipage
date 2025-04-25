@@ -6,8 +6,3 @@ export interface Conversation {
   messages: ChatCompletionMessageParam[];
   title: string;
 }
-
-export interface GeneratedImageCall {
-  data: string;
-  prompt: string;
-}
