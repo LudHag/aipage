@@ -2,6 +2,10 @@
 import { ref } from "vue";
 import { NInput, NButton } from "naive-ui";
 
+defineProps<{
+  loading: boolean;
+}>();
+
 const emit = defineEmits<{
   (e: "prompt", prompt: string): void;
 }>();
@@ -25,10 +29,19 @@ const formEnter = (e: KeyboardEvent) => {
   <form class="input-area" @submit.prevent="click" @keydown.enter="formEnter">
     <div class="input-container">
       <div class="text-input-container">
-        <NInput v-model:value="prompt" type="textarea" />
+        <NInput
+          v-model:value="prompt"
+          placeholder="Input image prompt"
+          type="textarea"
+          :disabled="loading"
+        />
       </div>
     </div>
-    <NButton type="primary" attrType="submit" @click.prevent="click"
+    <NButton
+      type="primary"
+      attrType="submit"
+      @click.prevent="click"
+      :disabled="loading"
       >Send</NButton
     >
   </form>

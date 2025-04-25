@@ -15,6 +15,7 @@ export const getGeneratedImage = async (
     model: "gpt-image-1",
     size: "1024x1024",
     output_format: "webp",
+    quality: "medium",
   });
 
   const images = generatedImage.data;

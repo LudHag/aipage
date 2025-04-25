@@ -1,5 +1,5 @@
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
-import { Conversation, GeneratedImageCall } from "./models";
+import { Conversation } from "./models";
 
 export const djb2HashCode = (str: string) => {
   let hash = 5381; // Seed
@@ -21,22 +21,6 @@ export const saveMessages = (messages: ChatCompletionMessageParam[]) => {
   };
 
   localStorage.setItem(`messages-${hash}`, JSON.stringify(conversation));
-};
-
-// export const saveImages = (images: GeneratedImageCall[]) => {
-//   localStorage.setItem(`images`, JSON.stringify(images));
-// };
-
-export const loadImages = (): GeneratedImageCall[] => {
-  const images = localStorage.getItem("images");
-  if (!images) {
-    return [];
-  }
-  return JSON.parse(images);
-};
-
-export const removeAllImages = () => {
-  localStorage.removeItem("images");
 };
 
 export const removeMessages = (messages: ChatCompletionMessageParam[]) => {

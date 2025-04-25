@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import OpenAI from "openai";
 import ChatInput from "./ChatInput.vue";
 import ChatContent from "./ChatContent.vue";
@@ -12,13 +12,11 @@ import { NSpin } from "naive-ui";
 import { getGeneratedImage } from "./openai-api";
 import {
   getConversations,
-  loadImages,
-  removeAllImages,
   removeAllMessages,
   removeMessages,
   saveMessages,
 } from "./utils";
-import { Conversation, GeneratedImageCall } from "./models";
+import { Conversation } from "./models";
 
 const props = defineProps<{
   apiKey: string;
@@ -34,28 +32,13 @@ const streamedMessage = ref<string>("");
 
 const conversations = ref<Conversation[]>([]);
 
-const generatedImages = ref<GeneratedImageCall[]>([]);
-const generatedImageSelected = ref<string | null>(null);
+const generatedImageSelected = ref<boolean>(false);
+const generatedImage = ref<string | null>(null);
 const generatedImageLoading = ref<boolean>(false);
 
 onMounted(() => {
   loadConversations();
-  const images = loadImages();
-  generatedImages.value = images;
   delListener();
-});
-
-const generatedImageCall = computed(() => {
-  if (generatedImageSelected.value) {
-    const generatedImage = generatedImages.value.find(
-      (image) => image.prompt === generatedImageSelected.value
-    );
-
-    if (generatedImage) {
-      return generatedImage;
-    }
-  }
-  return null;
 });
 
 const delListener = () => {
@@ -94,7 +77,7 @@ const question = (question: string, imageb64?: string) => {
 };
 
 const messagesSelected = (selectedMessages: ChatCompletionMessageParam[]) => {
-  generatedImageSelected.value = null;
+  generatedImageSelected.value = false;
   messages.value = selectedMessages;
   // Scroll down to the last message
   const content = document.querySelector(".content");
@@ -121,13 +104,6 @@ const removeall = () => {
   conversations.value = [];
 };
 
-const removeAllImageCall = () => {
-  generatedImageSelected.value = null;
-  removeAllImages();
-  const images = loadImages();
-  generatedImages.value = images;
-};
-
 const generateImage = (value: string) => {
   generatedImageLoading.value = true;
   getGeneratedImage(openai, value)
@@ -135,12 +111,8 @@ const generateImage = (value: string) => {
       if (!response) {
         return;
       }
-
-      generatedImages.value = [
-        ...generatedImages.value,
-        { prompt: value, data: response },
-      ];
-      generatedImageSelected.value = value;
+      generatedImageSelected.value = true;
+      generatedImage.value = response;
     })
     .finally(() => {
       generatedImageLoading.value = false;
@@ -152,9 +124,8 @@ const generateImage = (value: string) => {
   <div class="wrapper">
     <ChatConversations
       @messages="messagesSelected"
-      @generate="generatedImageSelected = $event"
+      @generate="generatedImageSelected = true"
       :conversations="conversations"
-      :images="generatedImages"
     />
     <main>
       <h1>Ai page</h1>
@@ -173,14 +144,14 @@ const generateImage = (value: string) => {
       <NSpin size="large" v-if="generatedImageLoading" />
 
       <GeneratedImageDisplay
-        v-if="generatedImageCall"
-        :image="generatedImageCall"
-        @removeall="removeAllImageCall()"
+        v-if="generatedImageSelected && generatedImage"
+        :image="generatedImage"
       />
 
       <GenerateImage
-        v-if="generatedImageSelected === 'new' && !generatedImageLoading"
+        v-if="generatedImageSelected"
         @prompt="generateImage"
+        :loading="generatedImageLoading"
       />
     </main>
   </div>
