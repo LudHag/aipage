@@ -10,12 +10,7 @@ import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 import { getAiResponse } from "./openai-api";
 import { NSpin } from "naive-ui";
 import { getGeneratedImage } from "./openai-api";
-import {
-  getConversations,
-  removeAllMessages,
-  removeMessages,
-  saveMessages,
-} from "./utils";
+import { getConversations, removeAllMessages, removeMessages, saveMessages } from "./utils";
 import { Conversation } from "./models";
 
 const props = defineProps<{

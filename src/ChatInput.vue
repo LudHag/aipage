@@ -67,9 +67,7 @@ const handleFileListUpdate = (newFileList: UploadFileInfo[]) => {
         </NUpload>
       </div>
     </div>
-    <NButton type="primary" attrType="submit" @click.prevent="click"
-      >Send</NButton
-    >
+    <NButton type="primary" attrType="submit" @click.prevent="click">Send</NButton>
   </form>
   <NButton type="warning" class="remove-button" @click.prevent="emit('remove')"
     >Remove conversation</NButton

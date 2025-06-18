@@ -18,10 +18,7 @@ const stringFromValue = (content: ContentType): string => {
 <template>
   <div class="content">
     <template v-for="message in messages">
-      <div
-        v-if="message.content"
-        :class="{ assistant: message.role === 'assistant' }"
-      >
+      <div v-if="message.content" :class="{ assistant: message.role === 'assistant' }">
         <MdRenderer :source="stringFromValue(message.content)"></MdRenderer>
       </div>
     </template>

@@ -21,9 +21,7 @@ const click = (conversation: Conversation) => {
   }
 };
 const sortedConversations = computed(() =>
-  props.conversations.toSorted(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  )
+  props.conversations.toSorted((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 );
 </script>
 
