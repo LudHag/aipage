@@ -1,5 +1,5 @@
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
-import { Conversation } from "./models";
+import { Conversation } from "../types/models";
 
 export const djb2HashCode = (str: string) => {
   let hash = 5381; // Seed

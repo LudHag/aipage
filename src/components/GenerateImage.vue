@@ -37,11 +37,7 @@ const formEnter = (e: KeyboardEvent) => {
         />
       </div>
     </div>
-    <NButton
-      type="primary"
-      attrType="submit"
-      @click.prevent="click"
-      :disabled="loading"
+    <NButton type="primary" attrType="submit" @click.prevent="click" :disabled="loading"
       >Send</NButton
     >
   </form>

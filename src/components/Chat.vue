@@ -7,16 +7,11 @@ import ChatConversations from "./ChatConversations.vue";
 import GenerateImage from "./GenerateImage.vue";
 import GeneratedImageDisplay from "./GeneratedImageDisplay.vue";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
-import { getAiResponse } from "./openai-api";
+import { getAiResponse } from "../utils/openai-api";
 import { NSpin } from "naive-ui";
-import { getGeneratedImage } from "./openai-api";
-import {
-  getConversations,
-  removeAllMessages,
-  removeMessages,
-  saveMessages,
-} from "./utils";
-import { Conversation } from "./models";
+import { getGeneratedImage } from "../utils/openai-api";
+import { getConversations, removeAllMessages, removeMessages, saveMessages } from "../utils/utils";
+import { Conversation } from "../types/models";
 
 const props = defineProps<{
   apiKey: string;

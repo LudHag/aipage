@@ -1,8 +1,5 @@
 import OpenAI from "openai";
-import {
-  ChatCompletionChunk,
-  ChatCompletionMessageParam,
-} from "openai/resources/index.mjs";
+import { ChatCompletionChunk, ChatCompletionMessageParam } from "openai/resources/index.mjs";
 import { Stream } from "openai/streaming.mjs";
 import { Ref } from "vue";
 
@@ -41,9 +38,7 @@ export const getAiResponse = (
         stream: true,
       })
       .then((response) =>
-        handleOpenAiStreamResponse(response, messages, streamedMessage).then(
-          () => resolve()
-        )
+        handleOpenAiStreamResponse(response, messages, streamedMessage).then(() => resolve())
       );
   });
 };

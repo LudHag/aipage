@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import { Conversation } from "./models";
-import { getMessages } from "./utils";
+import { Conversation } from "../types/models";
+import { getMessages } from "../utils/utils";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 
 const props = defineProps<{
@@ -21,9 +21,7 @@ const click = (conversation: Conversation) => {
   }
 };
 const sortedConversations = computed(() =>
-  props.conversations.toSorted(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  )
+  props.conversations.toSorted((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 );
 </script>
 
