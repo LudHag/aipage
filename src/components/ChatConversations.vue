@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import { Conversation } from "../types/models";
+import { Conversation } from "../types";
 import { getMessages } from "../utils/utils";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 

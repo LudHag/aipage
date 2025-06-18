@@ -11,7 +11,7 @@ import { getAiResponse } from "../utils/openai-api";
 import { NSpin } from "naive-ui";
 import { getGeneratedImage } from "../utils/openai-api";
 import { getConversations, removeAllMessages, removeMessages, saveMessages } from "../utils/utils";
-import { Conversation } from "../types/models";
+import { Conversation } from "../types";
 
 const props = defineProps<{
   apiKey: string;
