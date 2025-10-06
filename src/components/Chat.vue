@@ -12,6 +12,7 @@ import { NSpin } from "naive-ui";
 import { getGeneratedImage } from "../utils/openai-api";
 import { getConversations, removeAllMessages, removeMessages, saveMessages } from "../utils/utils";
 import { ChatModelType, Conversation } from "../types";
+import Thinking from "./Thinking.vue";
 
 const props = defineProps<{
   apiKey: string;
@@ -24,6 +25,7 @@ const openai = new OpenAI({
 
 const messages = ref<ChatCompletionMessageParam[]>([]);
 const streamedMessage = ref<string>("");
+const messageLoading = ref<boolean>(false);
 
 const conversations = ref<Conversation[]>([]);
 
@@ -64,8 +66,10 @@ const question = (question: string, imageb64?: string) => {
       content: [{ type: "image_url", image_url: { url: imageb64 } }],
     });
   }
-
+  messageLoading.value = true;
   getAiResponse(openai, messages, streamedMessage, chatModel.value).then(() => {
+    messageLoading.value = false;
+
     if (messages.value.length > 0) {
       saveMessages(messages.value);
       loadConversations();
@@ -133,6 +137,8 @@ const generateImage = (value: string) => {
         :messages="messages"
         :streamed-message="streamedMessage"
       />
+      <Thinking :active="messageLoading" />
+
       <ChatInput
         v-if="!generatedImageSelected"
         @question="question"
