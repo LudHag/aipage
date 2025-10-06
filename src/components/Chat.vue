@@ -11,7 +11,7 @@ import { getAiResponse } from "../utils/openai-api";
 import { NSpin } from "naive-ui";
 import { getGeneratedImage } from "../utils/openai-api";
 import { getConversations, removeAllMessages, removeMessages, saveMessages } from "../utils/utils";
-import { Conversation } from "../types";
+import { ChatModelType, Conversation } from "../types";
 
 const props = defineProps<{
   apiKey: string;
@@ -30,6 +30,8 @@ const conversations = ref<Conversation[]>([]);
 const generatedImageSelected = ref<boolean>(false);
 const generatedImage = ref<string | null>(null);
 const generatedImageLoading = ref<boolean>(false);
+
+const chatModel = ref<ChatModelType>("gpt-4o");
 
 onMounted(() => {
   loadConversations();
@@ -63,7 +65,7 @@ const question = (question: string, imageb64?: string) => {
     });
   }
 
-  getAiResponse(openai, messages, streamedMessage).then(() => {
+  getAiResponse(openai, messages, streamedMessage, chatModel.value).then(() => {
     if (messages.value.length > 0) {
       saveMessages(messages.value);
       loadConversations();
@@ -121,6 +123,7 @@ const generateImage = (value: string) => {
       @messages="messagesSelected"
       @generate="generatedImageSelected = true"
       :conversations="conversations"
+      v-model:chat-model="chatModel"
     />
     <main>
       <h1>Ai page</h1>

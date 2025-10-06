@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import { ChatCompletionChunk, ChatCompletionMessageParam } from "openai/resources/index.mjs";
 import { Stream } from "openai/streaming.mjs";
 import { Ref } from "vue";
+import { ChatModelType } from "../types";
 
 export const getGeneratedImage = async (
   openAi: OpenAI,
@@ -28,12 +29,13 @@ export const getGeneratedImage = async (
 export const getAiResponse = (
   openAi: OpenAI,
   messages: Ref<ChatCompletionMessageParam[]>,
-  streamedMessage: Ref<string>
+  streamedMessage: Ref<string>,
+  chatModel: ChatModelType
 ): Promise<void> => {
   return new Promise((resolve) => {
     openAi.chat.completions
       .create({
-        model: "gpt-4o",
+        model: chatModel,
         messages: messages.value,
         stream: true,
       })

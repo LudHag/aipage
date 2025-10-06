@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { NSelect } from "naive-ui";
 
-import { Conversation } from "../types";
+import { chatModels, ChatModelType, Conversation } from "../types";
 import { getMessages } from "../utils/utils";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 
 const props = defineProps<{
   conversations: Conversation[];
 }>();
+
+const chatModel = defineModel<ChatModelType>("chatModel");
 
 const emit = defineEmits<{
   (e: "messages", messages: ChatCompletionMessageParam[]): void;
@@ -23,10 +26,16 @@ const click = (conversation: Conversation) => {
 const sortedConversations = computed(() =>
   props.conversations.toSorted((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 );
+
+const chatModelOptions = chatModels.map((model) => ({
+  label: model,
+  value: model,
+}));
 </script>
 
 <template>
   <aside>
+    <NSelect class="chat-model-select" v-model:value="chatModel" :options="chatModelOptions" />
     <h2>Conversations</h2>
 
     <a @click.prevent="emit('messages', [])">New</a>
@@ -56,5 +65,8 @@ a {
   text-overflow: ellipsis;
   overflow: hidden;
   margin-bottom: 5px;
+}
+.chat-model-select {
+  width: fit-content;
 }
 </style>
