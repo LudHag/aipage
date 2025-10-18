@@ -13,7 +13,7 @@
   "dependencies": {
     "markdown-it": "^14.1.0",
     "naive-ui": "^2.43.1",
-    "openai": "^6.2.0",
+    "openai": "^6.5.0",
     "vue": "^3.5.22"
   },
   "devDependencies": {
@@ -21,7 +21,7 @@
     "@vitejs/plugin-vue": "^6.0.1",
     "prettier": "^3.6.2",
     "typescript": "^5.9.3",
-    "vite": "^7.1.9",
+    "vite": "^7.1.10",
     "vue-tsc": "^3.1.1"
   }
 }
