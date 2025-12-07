@@ -6,9 +6,9 @@ defineProps<{
 
 <template>
   <div class="thinking-dots">
-    <div class="dot" :class="{ active }"></div>
-    <div class="dot" :class="{ active }"></div>
-    <div class="dot" :class="{ active }"></div>
+    <div class="dot" :class="active ? 'active' : ''"></div>
+    <div class="dot" :class="active ? 'active' : ''"></div>
+    <div class="dot" :class="active ? 'active' : ''"></div>
   </div>
 </template>
 
