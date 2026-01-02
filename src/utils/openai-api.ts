@@ -35,15 +35,14 @@ export const getAiResponse = (
   return new Promise((resolve) => {
     let messagesToSend = [...messages.value];
 
-    if (chatModel === "gpt-5") {
+    if (chatModel === "gpt-5" && !messagesToSend.some((msg) => msg.role === "system")) {
       messagesToSend = [
-        ...messages.value,
         {
           role: "system",
           content:
             "Always format response as markdown, with code blocks using syntax highlighting with appropriate language tags (e.g., ```javascript, ```python, etc.).",
         },
-        ...messagesToSend,
+        ...messages.value,
       ];
     }
 
