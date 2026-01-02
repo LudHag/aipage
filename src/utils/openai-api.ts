@@ -41,7 +41,7 @@ export const getAiResponse = (
         {
           role: "system",
           content:
-            "Always format code blocks using markdown syntax with appropriate language tags (e.g., ```javascript, ```python, etc.). This ensures code is properly rendered and displayed.",
+            "Always format response as markdown, with code blocks using syntax highlighting with appropriate language tags (e.g., ```javascript, ```python, etc.).",
         },
         ...messagesToSend,
       ];
