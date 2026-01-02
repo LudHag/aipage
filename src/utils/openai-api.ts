@@ -33,10 +33,24 @@ export const getAiResponse = (
   chatModel: ChatModelType
 ): Promise<void> => {
   return new Promise((resolve) => {
+    let messagesToSend = [...messages.value];
+
+    if (chatModel === "gpt-5") {
+      messagesToSend = [
+        ...messages.value,
+        {
+          role: "system",
+          content:
+            "Always format code blocks using markdown syntax with appropriate language tags (e.g., ```javascript, ```python, etc.). This ensures code is properly rendered and displayed.",
+        },
+        ...messagesToSend,
+      ];
+    }
+
     openAi.chat.completions
       .create({
         model: chatModel,
-        messages: messages.value,
+        messages: messagesToSend,
         stream: true,
       })
       .then((response) =>
