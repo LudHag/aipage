@@ -2,7 +2,6 @@ import OpenAI from "openai";
 import { ChatCompletionChunk, ChatCompletionMessageParam } from "openai/resources/index.mjs";
 import { Stream } from "openai/streaming.mjs";
 import { Ref } from "vue";
-import { ChatModelType } from "../types";
 
 export const getGeneratedImage = async (
   openAi: OpenAI,
@@ -10,7 +9,7 @@ export const getGeneratedImage = async (
 ): Promise<string | undefined> => {
   const generatedImage = await openAi.images.generate({
     prompt,
-    model: "gpt-image-1",
+    model: "gpt-image-1.5",
     size: "1024x1024",
     output_format: "webp",
     quality: "medium",
@@ -29,13 +28,11 @@ export const getGeneratedImage = async (
 export const getAiResponse = (
   openAi: OpenAI,
   messages: Ref<ChatCompletionMessageParam[]>,
-  streamedMessage: Ref<string>,
-  chatModel: ChatModelType
+  streamedMessage: Ref<string>
 ): Promise<void> => {
   return new Promise((resolve) => {
     let messagesToSend = [...messages.value];
-
-    if (chatModel === "gpt-5" && !messagesToSend.some((msg) => msg.role === "system")) {
+    if (!messagesToSend.some((msg) => msg.role === "system")) {
       messagesToSend = [
         {
           role: "system",
@@ -48,7 +45,7 @@ export const getAiResponse = (
 
     openAi.chat.completions
       .create({
-        model: chatModel,
+        model: "gpt-5.2",
         messages: messagesToSend,
         stream: true,
       })
