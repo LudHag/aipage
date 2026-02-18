@@ -5,23 +5,23 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
+    "build": "npm run typecheck && vite build",
     "preview": "vite preview",
-    "typecheck": "vue-tsc --noEmit",
+    "typecheck": "golar --noEmit",
     "format": "prettier --write \"src/**/*.{ts,js,vue}\" \"*.{js,ts,json,md}\""
   },
   "dependencies": {
-    "markdown-it": "^14.1.0",
+    "markdown-it": "^14.1.1",
     "naive-ui": "^2.43.2",
-    "openai": "^6.17.0",
-    "vue": "^3.5.27"
+    "openai": "^6.22.0",
+    "vue": "^3.5.28"
   },
   "devDependencies": {
+    "@golar/vue": "^0.0.13",
     "@types/markdown-it": "^14.1.2",
-    "@vitejs/plugin-vue": "^6.0.3",
+    "@vitejs/plugin-vue": "^6.0.4",
+    "golar": "^0.0.13",
     "prettier": "^3.8.1",
-    "typescript": "^5.9.3",
-    "vite": "8.0.0-beta.14",
-    "vue-tsc": "^3.2.4"
+    "vite": "8.0.0-beta.14"
   }
 }
