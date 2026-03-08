@@ -12,16 +12,16 @@
   },
   "dependencies": {
     "markdown-it": "^14.1.1",
-    "naive-ui": "^2.43.2",
-    "openai": "^6.22.0",
-    "vue": "^3.5.28"
+    "naive-ui": "^2.44.1",
+    "openai": "^6.27.0",
+    "vue": "^3.5.29"
   },
   "devDependencies": {
-    "@golar/vue": "^0.0.13",
+    "@golar/vue": "^0.0.15",
     "@types/markdown-it": "^14.1.2",
     "@vitejs/plugin-vue": "^6.0.4",
-    "golar": "^0.0.13",
+    "golar": "^0.0.15",
     "prettier": "^3.8.1",
-    "vite": "8.0.0-beta.14"
+    "vite": "8.0.0-beta.16"
   }
 }
