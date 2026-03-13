@@ -20,7 +20,7 @@
     "@golar/vue": "^0.0.16",
     "@types/markdown-it": "^14.1.2",
     "@vitejs/plugin-vue": "^6.0.5",
-    "golar": "^0.0.15",
+    "golar": "^0.0.16",
     "prettier": "^3.8.1",
     "vite": "^8.0.0"
   }
