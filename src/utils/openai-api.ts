@@ -45,7 +45,7 @@ export const getAiResponse = (
 
     openAi.chat.completions
       .create({
-        model: "gpt-5.2",
+        model: "gpt-5.4",
         messages: messagesToSend,
         stream: true,
       })
