@@ -11,17 +11,17 @@
     "format": "prettier --write \"src/**/*.{ts,js,vue}\" \"*.{js,ts,json,md}\""
   },
   "dependencies": {
-    "markdown-it": "^14.1.1",
+    "markdown-it": "^14.2.0",
     "naive-ui": "^2.44.1",
-    "openai": "^6.37.0",
-    "vue": "^3.5.34"
+    "openai": "^6.44.0",
+    "vue": "^3.5.38"
   },
   "devDependencies": {
     "@golar/vue": "^0.1.7",
     "@types/markdown-it": "^14.1.2",
-    "@vitejs/plugin-vue": "^6.0.6",
+    "@vitejs/plugin-vue": "^6.0.7",
     "golar": "^0.1.7",
-    "prettier": "^3.8.3",
-    "vite": "^8.0.12"
+    "prettier": "^3.8.4",
+    "vite": "^8.0.16"
   }
 }
