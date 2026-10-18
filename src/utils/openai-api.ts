@@ -10,6 +10,10 @@ import { Ref } from "vue";
 
 export type ChatMode = "simple" | "agentic";
 
+const SIMPLE_CHAT_MODEL = "gpt-6-luna";
+const AGENTIC_MODEL = "gpt-6.1-sol";
+const IMAGE_MODEL = "gpt-image-2.5-flare";
+
 const MARKDOWN_INSTRUCTIONS =
   "Always format response as markdown, with code blocks using syntax highlighting with appropriate language tags (e.g., ```javascript, ```python, etc.).";
 
@@ -19,7 +23,7 @@ export const getGeneratedImage = async (
 ): Promise<string | undefined> => {
   const generatedImage = await openAi.images.generate({
     prompt,
-    model: "gpt-image-1.5",
+    model: IMAGE_MODEL,
     size: "1024x1024",
     output_format: "webp",
     quality: "medium",
@@ -139,7 +143,8 @@ export const getSimpleChatResponse = async (
 
   try {
     const stream = await openAi.chat.completions.create({
-      model: "gpt-5.4",
+      model: SIMPLE_CHAT_MODEL,
+      reasoning_effort: "low",
       messages: messagesWithSystem(messages.value),
       stream: true,
     });
@@ -175,7 +180,7 @@ export const getAgenticResponse = async (
 
   try {
     const stream = await openAi.responses.create({
-      model: "gpt-5.4",
+      model: AGENTIC_MODEL,
       instructions: MARKDOWN_INSTRUCTIONS,
       input: toResponseInput(messages.value),
       tools: [
