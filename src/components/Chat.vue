@@ -7,8 +7,8 @@ import ChatConversations from "./ChatConversations.vue";
 import GenerateImage from "./GenerateImage.vue";
 import GeneratedImageDisplay from "./GeneratedImageDisplay.vue";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
-import { getAiResponse } from "../utils/openai-api";
-import { NSpin } from "naive-ui";
+import { ChatMode, getAiResponse } from "../utils/openai-api";
+import { NSpin, NSwitch } from "naive-ui";
 import { getGeneratedImage } from "../utils/openai-api";
 import { getConversations, removeAllMessages, removeMessages, saveMessages } from "../utils/utils";
 import { Conversation } from "../types";
@@ -23,9 +23,18 @@ const openai = new OpenAI({
   apiKey: props.apiKey,
 });
 
+const CHAT_MODE_KEY = "chatMode";
+
+const loadChatMode = (): ChatMode => {
+  const stored = localStorage.getItem(CHAT_MODE_KEY);
+  return stored === "agentic" ? "agentic" : "simple";
+};
+
 const messages = ref<ChatCompletionMessageParam[]>([]);
 const streamedMessage = ref<string>("");
+const toolStatus = ref<string>("");
 const messageLoading = ref<boolean>(false);
+const agentModeEnabled = ref(loadChatMode() === "agentic");
 
 const conversations = ref<Conversation[]>([]);
 
@@ -48,6 +57,12 @@ const delListener = () => {
   });
 };
 
+const chatMode = (): ChatMode => (agentModeEnabled.value ? "agentic" : "simple");
+
+const onAgentModeChange = (enabled: boolean) => {
+  localStorage.setItem(CHAT_MODE_KEY, enabled ? "agentic" : "simple");
+};
+
 const loadConversations = () => {
   const storeageConversations: Conversation[] = getConversations();
 
@@ -56,7 +71,7 @@ const loadConversations = () => {
   }
 };
 
-const question = (question: string, imageb64?: string) => {
+const question = async (question: string, imageb64?: string) => {
   messages.value = [...messages.value, { role: "user", content: question }];
   if (imageb64) {
     messages.value.push({
@@ -65,14 +80,15 @@ const question = (question: string, imageb64?: string) => {
     });
   }
   messageLoading.value = true;
-  getAiResponse(openai, messages, streamedMessage).then(() => {
-    messageLoading.value = false;
-
+  try {
+    await getAiResponse(openai, messages, streamedMessage, toolStatus, chatMode());
     if (messages.value.length > 0) {
       saveMessages(messages.value);
       loadConversations();
     }
-  });
+  } finally {
+    messageLoading.value = false;
+  }
 };
 
 const messagesSelected = (selectedMessages: ChatCompletionMessageParam[]) => {
@@ -135,6 +151,16 @@ const generateImage = (value: string) => {
         :streamed-message="streamedMessage"
       />
       <Thinking :active="messageLoading" />
+      <p v-if="agentModeEnabled && toolStatus" class="tool-status">{{ toolStatus }}...</p>
+
+      <div v-if="!generatedImageSelected" class="mode-toggle">
+        <NSwitch
+          v-model:value="agentModeEnabled"
+          :disabled="messageLoading"
+          @update:value="onAgentModeChange"
+        />
+        <span>Agent mode (web search &amp; code)</span>
+      </div>
 
       <ChatInput
         v-if="!generatedImageSelected"
@@ -168,5 +194,18 @@ main {
 }
 .wrapper {
   display: flex;
+}
+.tool-status {
+  margin: 0 30px 10px;
+  color: #555;
+  font-size: 0.9rem;
+}
+.mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 30px 10px;
+  width: 100%;
+  max-width: 1000px;
 }
 </style>
