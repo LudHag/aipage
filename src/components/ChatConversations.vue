@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { NSwitch } from "naive-ui";
 
 import { Conversation } from "../types";
 import { getMessages } from "../utils/utils";
@@ -7,11 +8,14 @@ import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 
 const props = defineProps<{
   conversations: Conversation[];
+  agentModeEnabled: boolean;
+  agentModeDisabled: boolean;
 }>();
 
 const emit = defineEmits<{
   (e: "messages", messages: ChatCompletionMessageParam[]): void;
   (e: "generate"): void;
+  (e: "update:agentModeEnabled", enabled: boolean): void;
 }>();
 
 const click = (conversation: Conversation) => {
@@ -27,6 +31,15 @@ const sortedConversations = computed(() =>
 
 <template>
   <aside>
+    <div class="mode-toggle">
+      <NSwitch
+        :value="props.agentModeEnabled"
+        :disabled="props.agentModeDisabled"
+        @update:value="(enabled: boolean) => emit('update:agentModeEnabled', enabled)"
+      />
+      <span>Agent mode (web search &amp; code)</span>
+    </div>
+
     <h2>Conversations</h2>
 
     <a @click.prevent="emit('messages', [])">New</a>
@@ -47,6 +60,12 @@ aside {
   text-align: left;
   width: 300px;
   padding-right: 10px;
+}
+.mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
 }
 a {
   display: block;

@@ -8,7 +8,7 @@ import GenerateImage from "./GenerateImage.vue";
 import GeneratedImageDisplay from "./GeneratedImageDisplay.vue";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 import { ChatMode, getAiResponse } from "../utils/openai-api";
-import { NSpin, NSwitch } from "naive-ui";
+import { NSpin } from "naive-ui";
 import { getGeneratedImage } from "../utils/openai-api";
 import { getConversations, removeAllMessages, removeMessages, saveMessages } from "../utils/utils";
 import { Conversation } from "../types";
@@ -60,6 +60,7 @@ const delListener = () => {
 const chatMode = (): ChatMode => (agentModeEnabled.value ? "agentic" : "simple");
 
 const onAgentModeChange = (enabled: boolean) => {
+  agentModeEnabled.value = enabled;
   localStorage.setItem(CHAT_MODE_KEY, enabled ? "agentic" : "simple");
 };
 
@@ -141,6 +142,9 @@ const generateImage = (value: string) => {
       @messages="messagesSelected"
       @generate="generatedImageSelected = true"
       :conversations="conversations"
+      :agent-mode-enabled="agentModeEnabled"
+      :agent-mode-disabled="messageLoading"
+      @update:agent-mode-enabled="onAgentModeChange"
     />
     <main>
       <h1>Ai page</h1>
@@ -152,15 +156,6 @@ const generateImage = (value: string) => {
       />
       <Thinking :active="messageLoading" />
       <p v-if="agentModeEnabled && toolStatus" class="tool-status">{{ toolStatus }}...</p>
-
-      <div v-if="!generatedImageSelected" class="mode-toggle">
-        <NSwitch
-          v-model:value="agentModeEnabled"
-          :disabled="messageLoading"
-          @update:value="onAgentModeChange"
-        />
-        <span>Agent mode (web search &amp; code)</span>
-      </div>
 
       <ChatInput
         v-if="!generatedImageSelected"
@@ -199,13 +194,5 @@ main {
   margin: 0 30px 10px;
   color: #555;
   font-size: 0.9rem;
-}
-.mode-toggle {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0 30px 10px;
-  width: 100%;
-  max-width: 1000px;
 }
 </style>
